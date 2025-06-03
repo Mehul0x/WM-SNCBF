@@ -7,7 +7,6 @@ import numpy as np
 ## This code is for initializing the system dimension
 ## and training (NN) parameters
 ###########################################
-
 ############################################
 # set default data type to double; for GPU
 # training use float
@@ -81,6 +80,7 @@ lip_c=22
 # number of training epochs
 ############################################
 EPOCHS = 500
+BATCH_SIZE=32
 
 ############################################
 ############################################

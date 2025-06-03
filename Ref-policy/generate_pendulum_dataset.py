@@ -130,7 +130,7 @@ def main():
             
 
     # Save metadata as CSV
-    with open('Ref-policy/pendulum_dataset.csv', 'w', newline='') as csvfile:
+    with open('Ref-policy/pendulum_dataset_controller.csv', 'w', newline='') as csvfile:
         fieldnames = ["state_image", "category", "action", "next_state_image", "observation"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()

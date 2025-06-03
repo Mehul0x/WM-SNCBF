@@ -32,7 +32,7 @@ import csv
 from PIL import Image
 
 # Output directories
-os.makedirs('images', exist_ok=True)
+os.makedirs('World-Model/images', exist_ok=True)
 
 def categorize(theta, theta_dot):
     if (-math.pi/12 < theta < math.pi/12) and (-math.pi/12 < theta_dot < math.pi/12):
@@ -43,14 +43,14 @@ def categorize(theta, theta_dot):
         return "buffer"
 
 def get_theta_theta_dot(obs):
-    # Pendulum: [cos(theta), sin(theta), theta_dot]
+    # Pendulum: [cos(theta), sin(theta), theta_dot]p
     cos_theta, sin_theta, theta_dot = obs
     theta = math.atan2(sin_theta, cos_theta)
     return theta, theta_dot
 
 def save_img(img_array, img_name):
     img = Image.fromarray(img_array)
-    img.save(os.path.join('images', img_name))
+    img.save(os.path.join('World-Model/images', img_name))
 
 def main():
     env = gym.make("Pendulum-v1", render_mode="rgb_array")
@@ -60,7 +60,7 @@ def main():
     step_num = 0
 
     # 1. Random actions for 5000 images
-    num_random = 5000
+    num_random = 2500
     while total_images < num_random:
         img_array = env.render()
         curr_img_name = f"state_{step_num}.png"
@@ -91,7 +91,7 @@ def main():
             obs, _ = env.reset()
 
     # 2. P controller for next 600 images
-    num_p_control = 600
+    num_p_control = 2000
     Kp = 2.0  # Proportional gain, tune as needed
 
     for _ in range(num_p_control):
@@ -130,7 +130,7 @@ def main():
             
 
     # Save metadata as CSV
-    with open('pendulum_dataset.csv', 'w', newline='') as csvfile:
+    with open('World-Model/pendulum_dataset.csv', 'w', newline='') as csvfile:
         fieldnames = ["state_image", "category", "action", "next_state_image", "observation"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()

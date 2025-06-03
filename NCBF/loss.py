@@ -3,7 +3,6 @@ import torch.nn as nn
 import superp_init as superp
 import prob
 import torch.nn.functional as F
-import data
 ############################################
 # constraints for barrier certificate B:
 # (1) init ==> B <= 0
@@ -26,12 +25,13 @@ def calc_loss(barr_nn, ctrl_nn, inputs, labels):
     loss_unsafe=torch.tensor(0.0)
     loss_lie=torch.tensor(0.0)
     total_loss = torch.tensor(0.0)
-    
+
     for i, input in enumerate(inputs):
         if labels[i] == 'safe':
             output_init = barr_nn(input)
             loss_init = torch.relu(output_init - superp.gamma + superp.TOL_INIT ) #tolerance
         elif labels[i] == 'unsafe':
+            print("unsafe")
             output_unsafe = barr_nn(input)
             loss_unsafe = torch.relu((- output_unsafe) + superp.lamda + superp.TOL_UNSAFE) #tolerance
 

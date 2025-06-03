@@ -1,9 +1,7 @@
 import pandas as pandas
 import numpy as np
 import os
-import torch
 from torch.utils.data import Dataset, DataLoader
-import torchvision
 
 class dataset(Dataset):
     def __init__(self, csv_file, embedding_dir):

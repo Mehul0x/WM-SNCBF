@@ -6,14 +6,17 @@ import numpy as np
 from transformers import AutoImageProcessor, AutoModel
 
 # Directory containing images
-data_dir = 'images'
-output_dir = 'dinov2_embeddings'
+data_dir = 'World-Model/images'
+output_dir = 'World-Model/dinov2_embeddings'
 os.makedirs(output_dir, exist_ok=True)
 
 # Load DINOv2 model and processor (ViT-large variant, can be changed)
-model_name = 'facebook/dinov2-base'
+model_name = 'facebook/dinov2-small'
 processor = AutoImageProcessor.from_pretrained(model_name)
 model = AutoModel.from_pretrained(model_name)
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
 
 model.eval()
 for param in model.parameters():
@@ -22,6 +25,7 @@ for param in model.parameters():
 def encode_image(image_path):
     image = Image.open(image_path).convert('RGB')
     inputs = processor(images=image, return_tensors="pt")
+    inputs = {k: v.to(device) for k, v in inputs.items()}
 
     outputs = model(**inputs)
     # Patch embeddings: (batch, num_patches+1, embed_dim), remove CLS token

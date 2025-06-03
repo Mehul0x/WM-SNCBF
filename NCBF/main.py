@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import superp_init as superp
 import ann
-import data
 import train
 import time
 import policy
@@ -22,34 +21,19 @@ def barr_ctrl_nn():
     ctrl_nn = ctrl_nn.to(device)
     ctrl_nn.eval()
 
-    # loading pre-trained model
-    # if superp.FINE_TUNE == 1:
-    #     barr_nn=torch.load('saved_weights/barr_nn') #stored weights/barr_nn_best_100_0
-    #     ctrl_nn=torch.load('saved_weights/ctrl_nn') #stored weights/ctrl_nn_best_100_0
-    
-    
-    # generate training data
-    time_start_data = time.time()
+    csv_file="World-Model/pendulum_dataset.csv"
+    emb="World-Model/dinov2_embeddings"
 
-    batches_init, batches_unsafe, batches_domain = data.gen_batch_data()
-
-    time_end_data = time.time()
-    
     ############################################
     # number of mini_batches
     ############################################
-    BATCHES_I = len(batches_init)
-    BATCHES_U = len(batches_unsafe)
-    BATCHES_D = len(batches_domain)
-    BATCHES = max(BATCHES_I, BATCHES_U, BATCHES_D)
-    NUM_BATCHES = [BATCHES_I, BATCHES_U, BATCHES_D, BATCHES]
-    
+    NUM_BATCHES = superp.EPOCHS // superp.BATCH_SIZE
+
     # train and return the learned model
     time_start_train = time.time()
-    res = train.itr_train(barr_nn, ctrl_nn, batches_init, batches_unsafe, batches_domain, NUM_BATCHES) 
+    res = train.itr_train(barr_nn, ctrl_nn,  NUM_BATCHES, csv_file, emb) # train the barrier 
     time_end_train = time.time()
     
-    print("\nData generation totally costs:", time_end_data - time_start_data)
     print("Training totally costs:", time_end_train - time_start_train)
     print("-------------------------------------------------------------------------")
 
