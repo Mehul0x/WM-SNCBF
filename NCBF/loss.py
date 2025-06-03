@@ -18,9 +18,7 @@ import torch.nn.functional as F
     
     
 def calc_loss(barr_nn, ctrl_nn, inputs, labels):
-    # compute loss of init    
-    print(inputs.shape)
-    
+    # compute loss of init        
     loss_init=torch.tensor(0.0)
     loss_unsafe=torch.tensor(0.0)
     loss_lie=torch.tensor(0.0)
@@ -31,7 +29,6 @@ def calc_loss(barr_nn, ctrl_nn, inputs, labels):
             output_init = barr_nn(input)
             loss_init = torch.relu(output_init - superp.gamma + superp.TOL_INIT ) #tolerance
         elif labels[i] == 'unsafe':
-            print("unsafe")
             output_unsafe = barr_nn(input)
             loss_unsafe = torch.relu((- output_unsafe) + superp.lamda + superp.TOL_UNSAFE) #tolerance
 

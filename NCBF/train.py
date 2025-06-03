@@ -57,7 +57,7 @@ def initialize_nn(barr_nn, ctrl_nn, num_batches):
     return optimizer,scheduler
 
 def itr_train(barr_nn, ctrl_nn, NUM_BATCHES, csv, emb): 
-    print("AAAAAAAAAAAAAAAAAAAAA", csv)
+
     dataset=data_with_loader.dataset(csv_file= csv, embedding_dir=emb)
     dataloader=DataLoader(dataset=dataset, batch_size=superp.BATCH_SIZE, shuffle=True)
 
@@ -67,7 +67,7 @@ def itr_train(barr_nn, ctrl_nn, NUM_BATCHES, csv, emb):
 
     
     # initialize nn models and optimizers and schedulers
-    optimizer_barr, scheduler_barr = initialize_nn(barr_nn, NUM_BATCHES)
+    optimizer_barr, scheduler_barr = initialize_nn(barr_nn, ctrl_nn, NUM_BATCHES)
 
     for epoch in tqdm(range(superp.EPOCHS), desc='Epochs'): # train for a number of epochs
         epoch_loss = 0 # scalar (move outside mini-batch loop)

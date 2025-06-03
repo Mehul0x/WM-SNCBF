@@ -1,7 +1,8 @@
 import pandas as pandas
 import numpy as np
 import os
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
+import torch
 
 class dataset(Dataset):
     def __init__(self, csv_file, embedding_dir):
@@ -10,8 +11,8 @@ class dataset(Dataset):
         
     def __getitem__(self, idx):
         row = self.df.iloc[idx]
-        emb = self.get_embedding(row['state_img'])
-        label = row['label']
+        emb = self.get_embedding(row['state_image'])
+        label = row['category']
 
         return emb, label
     
@@ -21,7 +22,4 @@ class dataset(Dataset):
     def get_embedding(self, state_img):
         npy_name = state_img.replace('.png', '.npy')
         npy_path = os.path.join(self.embedding_dir, npy_name)
-        return np.load(npy_path)
-    
-dataloader=DataLoader(dataset=dataset(csv_file='data.csv', embedding_dir='embeddings'),
-                     batch_size=32, shuffle=True, num_workers=4)
+        return torch.tensor(np.load(npy_path), dtype=torch.float64).to(torch.device('cuda' if torch.cuda.is_available() else 'cpu'))
